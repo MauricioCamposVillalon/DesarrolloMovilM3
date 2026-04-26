@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechDiversa - Panel Cloud Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            #cuerpo-tabla { min-height: 200px; }
+        }
+
+        /* Animación suave para los modales */
+        .modal-active {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-10 text-slate-800">
+
+    <div class="max-w-2xl mx-auto">
+        <header class="text-center mb-12">
+            <div
+                class="inline-block px-4 py-1.5 mb-4 text-[10px] font-black bg-indigo-100 text-indigo-600 rounded-full tracking-[0.2em] uppercase">
+                Panel Optimizado M3
+            </div>
+            <h1 class="text-5xl font-black tracking-tighter">Panel <span class="text-indigo-600">Usuarios</span></h1>
+        </header>
+
+        <div
+            class="bg-white rounded-[2rem] shadow-2xl shadow-indigo-100/50 border border-slate-100 overflow-hidden mb-8">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Identidad
+                        </th>
+                        <th
+                            class="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-center">
+            <button onclick="prepararAlta()"
+                class="group relative bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 px-12 rounded-2xl shadow-xl shadow-indigo-200 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3">
+                <svg class="w-6 h-6 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24" stroke-width="3">
+                    <path d="M12 4v16m8-8H4" />
+                </svg>
+                NUEVO REGISTRO
+            </button>
+        </div>
+    </div>
+
+    <div id="panel-formulario"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[100] hidden">
+       
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-lg w-full shadow-2xl border border-white/20">
+            <h2 id="titulo-operacion"
+                class="text-3xl font-black text-slate-800 mb-8 text-center uppercase tracking-tighter">Nuevo Registro
+            </h2>
+
+            <input type="hidden" id="id-documento">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="md:col-span-2">
+                    <label
+                        class="text-[10px] font-black text-slate-400 ml-3 uppercase tracking-widest mb-1 block">Nombre
+                        Completo</label>
+                    <input type="text" id="nombre"
+                        class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold text-slate-700"
+                        placeholder="Ej: Juan Perez">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 ml-3 uppercase tracking-widest mb-1 block">Email
+                        Institucional</label>
+                    <input type="email" id="email"
+                        class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold"
+                        placeholder="micorreo@gmail.com">
+                </div>
+                <div>
+                    <label
+                        class="text-[10px] font-black text-slate-400 ml-3 uppercase tracking-widest mb-1 block">Teléfono
+                        (9 dígitos)</label>
+                    <input type="number" id="telefono"
+                        oninput="if(this.value.length > 9) this.value = this.value.slice(0, 9);"
+                        class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold"
+                        placeholder="9XXXXXXXX">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 ml-3 uppercase tracking-widest mb-1 block">Calle
+                        / Domicilio</label>
+                    <input type="text" id="calle"
+                        class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold">
+                </div>
+                <div>
+                    <label
+                        class="text-[10px] font-black text-slate-400 ml-3 uppercase tracking-widest mb-1 block">Ciudad</label>
+                    <input type="text" id="ciudad"
+                        class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-500 focus:bg-white outline-none transition-all font-bold">
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-10">
+                <button onclick="guardarCambios()" id="btn-guardar"
+                    class="flex-1 bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 uppercase text-xs tracking-widest">Guardar</button>
+                <button onclick="cerrarEdicion()"
+                    class="flex-1 bg-slate-100 text-slate-500 font-black py-5 rounded-2xl hover:bg-slate-200 transition-all uppercase text-xs tracking-widest">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-borrar"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[200] hidden">
+        <div class="bg-white rounded-[2rem] p-10 max-w-sm w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-black text-slate-800 mb-2">¿Eliminar?</h3>
+            <p class="text-slate-400 font-semibold text-sm mb-8">Esta acción quitará el registro permanentemente de la
+                nube.</p>
+            <div class="flex gap-4">
+                <button onclick="confirmarBorrado()"
+                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-red-100 uppercase text-xs">Borrar</button>
+                <button onclick="cerrarModalBorrar()"
+                    class="flex-1 bg-slate-100 text-slate-500 font-black py-4 rounded-2xl hover:bg-slate-200 transition-all uppercase text-xs">No</button>
+            </div>
+        </div>
+    </div>
+    <div id="toast-notificacion" class="fixed bottom-10 right-10 flex items-center bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-x-[150%] transition-transform duration-500 z-[300] border border-white/10">
+    <div class="flex items-center gap-3">
+        <div id="toast-icon" class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <span id="toast-mensaje" class="text-xs font-black uppercase tracking-wider">Mensaje aquí</span>
+    </div>
+</div>
+
+    <script src="app.js" defer></script>
+</body>
+
+</html>
