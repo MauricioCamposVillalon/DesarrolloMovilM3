@@ -1,18 +1,18 @@
-// --- 1. CONFIGURACIÓN ---
+// --- CONFIGURACION ---
 const URL_BASE = "https://firestore.googleapis.com/v1/projects/entornodesarrollom3/databases/(default)/documents/Usuarios";
 let listaUsuarios = [];
 let usuarioABorrar = null;
 
-// --- 2. CARGAR DATOS (Optimización: Caché) ---
+// --- CARGAR DATOS  Y METODO GET ---
 const obtenerUsuarios = async () => {
     const cuerpo = document.getElementById('cuerpo-tabla');
     const cache = localStorage.getItem('usuarios_v3_cache');
-    
+
     if (cache) {
         listaUsuarios = JSON.parse(cache);
         renderizarTabla();
     } else {
-        cuerpo.innerHTML = `<tr><td colspan="2" class="text-center py-10 text-gray-400 animate-pulse font-bold text-xs uppercase">Sincronizando... ⏳</td></tr>`;
+        cuerpo.innerHTML = `<tr><td colspan="2" class="text-center py-10 text-gray-400 animate-pulse font-bold text-xs uppercase">Sincronizando... </td></tr>`;
     }
 
     try {
@@ -25,7 +25,7 @@ const obtenerUsuarios = async () => {
     } catch (e) { console.error("Fallo de red:", e); }
 };
 
-// --- 3. RENDERIZAR TABLA (Diseño Premium) ---
+// --- RENDERIZAR TABLA  ---
 const renderizarTabla = () => {
     const cuerpo = document.getElementById('cuerpo-tabla');
     cuerpo.innerHTML = "";
@@ -69,7 +69,7 @@ const renderizarTabla = () => {
     });
 };
 
-// --- 4. GUARDAR (Optimización: Latencia Cero) ---
+// --- GUARDAR  ---
 const guardarCambios = async () => {
     const idActual = document.getElementById('id-documento').value;
     const btn = document.getElementById('btn-guardar');
@@ -94,16 +94,21 @@ const guardarCambios = async () => {
             Nombre: { stringValue: vNombre },
             email: { stringValue: vEmail },
             Telefono: { integerValue: vTel },
-            direccion: { mapValue: { fields: {
-                calle: { stringValue: document.getElementById('calle').value },
-                ciudad: { stringValue: document.getElementById('ciudad').value }
-            }}}
+            direccion: {
+                mapValue: {
+                    fields: {
+                        calle: { stringValue: document.getElementById('calle').value },
+                        ciudad: { stringValue: document.getElementById('ciudad').value }
+                    }
+                }
+            }
         }
     };
-
+// --- METODO POST ---
     try {
         const url = idActual ? `https://firestore.googleapis.com/v1/${idActual}` : URL_BASE;
         const res = await fetch(url, {
+            
             method: idActual ? 'PATCH' : 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -126,7 +131,7 @@ const guardarCambios = async () => {
     finally { btn.innerText = "GUARDAR"; btn.disabled = false; }
 };
 
-// --- 5. NOTIFICACIONES (Corregido el error de la imagen) ---
+// --- NOTIFICACIONES EN LA APP---
 const mostrarNotificacion = (mensaje, esError = false) => {
     const toast = document.getElementById('toast-notificacion');
     const msg = document.getElementById('toast-mensaje');
@@ -139,21 +144,21 @@ const mostrarNotificacion = (mensaje, esError = false) => {
     toast.classList.remove('translate-x-[150%]');
     setTimeout(() => {
         toast.classList.add('translate-x-[150%]');
-    }, 3000); // <-- Aquí estaba el error del punto y coma
+    }, 3000);
 };
 
 // --- UTILIDADES ---
 const abrirPanel = () => {
     const p = document.getElementById('panel-formulario');
-    if(p) p.classList.remove('hidden');
+    if (p) p.classList.remove('hidden');
 };
 const cerrarEdicion = () => {
     const p = document.getElementById('panel-formulario');
-    if(p) p.classList.add('hidden');
+    if (p) p.classList.add('hidden');
 };
 const prepararAlta = () => {
     document.getElementById('id-documento').value = "";
-    ['nombre','email','telefono','calle','ciudad'].forEach(id => document.getElementById(id).value = "");
+    ['nombre', 'email', 'telefono', 'calle', 'ciudad'].forEach(id => document.getElementById(id).value = "");
     document.getElementById('titulo-operacion').innerText = "Nuevo Registro";
     abrirPanel();
 };
@@ -172,6 +177,7 @@ const prepararEdicion = (id) => {
 
 const abrirModalBorrar = (id) => { usuarioABorrar = id; document.getElementById('modal-borrar').classList.remove('hidden'); };
 const cerrarModalBorrar = () => document.getElementById('modal-borrar').classList.add('hidden');
+// ---     ELIMINAR ---
 const confirmarBorrado = async () => {
     listaUsuarios = listaUsuarios.filter(u => u.name !== usuarioABorrar);
     renderizarTabla();
