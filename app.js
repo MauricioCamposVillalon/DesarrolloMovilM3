@@ -54,8 +54,8 @@ const renderizarTabla = () => {
                             <p class="text-[10px] font-black text-indigo-400 mb-1 uppercase tracking-widest">Ficha Cloud</p>
                             <p class="font-bold border-b border-white/10 pb-2 mb-2 text-sm">${nombre}</p>
                             <div class="space-y-1.5 text-[10px] font-semibold opacity-90 uppercase">
-                                <p>📧 ${email}</p>
-                                <p>📱 +56 ${tel}</p>
+                                <p> ${email}</p>
+                                <p> +56 ${tel}</p>
                             </div>
                         </div>
                     </div>
